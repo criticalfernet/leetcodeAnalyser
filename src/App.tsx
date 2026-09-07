@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getProgress, getQuestionsCount, getTopics, sync } from "./api";
 import type { Progress, Topic } from "./types";
 import TopicItem from "./components/TopicItem";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TopicPage from "./TopicPage";
 import { calculateTopicRating } from "./rating";
 import TotalPieChart from "./components/TotalPieChart";
@@ -16,6 +16,8 @@ export default function App() {
   const [progress, setProgress] = useState<Progress[]>([]);
   const [totalSolved, setTotalSolved] = useState(0);
   const [totalQ, setTotalQ] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -31,7 +33,7 @@ export default function App() {
     })();
   }, []);
 
-  const recommendedTopic = getRecommendedTopic(topics, scores);
+  const recommendedTopics = getRecommendedTopics(topics, scores);
   const location = useLocation();
 
   if (location.pathname.startsWith("/topic/")) {
@@ -79,9 +81,12 @@ export default function App() {
                 <Zap size={14} /> Recommendation
               </span>
               <h2 className="text-slate-400 font-medium text-sm">Suggested Focus</h2>
-              <p className="text-2xl font-bold text-white mt-1">
-                {recommendedTopic || "N/A"}
-              </p>
+              {recommendedTopics.map((topic) => (
+                <p className="text-[1.2rem] font-bold text-white mt-1 cursor-pointer hover:underline"
+                  onClick={() => navigate(`/topic/${topic.slug}`)}>
+                  {topic.name || "N/A"}
+                </p>
+              ))}
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-800/80">
@@ -138,7 +143,7 @@ export default function App() {
           </div>
         </div>
 
-        
+
 
         {/* Topic Grid Section */}
         <div>
@@ -220,18 +225,23 @@ const preferredSlugs = new Set([
   "combinatorics",
 ]);
 
-function getRecommendedTopic(topics: Topic[], scores: Record<string, number>): string {
-  const result = Object.entries(scores)
+function getRecommendedTopics(
+  topics: Topic[],
+  scores: Record<string, number>
+): { name: string; slug: string }[] {
+  return Object.entries(scores)
     .filter(([slug]) => preferredSlugs.has(slug))
-    .reduce<[string, number] | null>((best, current) =>
-      (best === null || current[1] > best[1]) ? current : best,
-      null
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([slug]) => {
+      const topic = topics.find((topic) => topic.slug === slug);
+
+      return topic
+        ? { name: topic.name, slug: topic.slug }
+        : null;
+    })
+    .filter(
+      (topic): topic is { name: string; slug: string } =>
+        topic !== null
     );
-
-  if (result === null) {
-    return "";
-  }
-
-  const slug = result[0];
-  return topics.find((topic) => topic.slug === slug)?.name ?? "";
 }
