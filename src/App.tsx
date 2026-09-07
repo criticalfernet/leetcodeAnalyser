@@ -7,6 +7,8 @@ import TopicPage from "./TopicPage";
 import { calculateTopicRating } from "./rating";
 import TotalPieChart from "./components/TotalPieChart";
 import { BookOpen, Zap } from "lucide-react";
+import Heatmap from "./components/Heatmap";
+import LeetCodeCard from "./components/LeetCodeCard";
 
 export default function App() {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -66,9 +68,7 @@ export default function App() {
           </button>
         </header>
 
-        {/* Analytics Top Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recommendation Banner */}
           <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 flex flex-col justify-between shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
               <Zap size={140} />
@@ -122,9 +122,23 @@ export default function App() {
             </div>
           </div>
 
-          {/* Recharts Distribution Chart */}
+
           <TotalPieChart topics={topics} progress={progress} />
         </div>
+
+
+
+        <div className="flex flex-col lg:flex-row gap-10 items-stretch w-full">
+          <div className="flex-[1.5]">
+            <Heatmap progress={progress} />
+          </div>
+
+          <div className="flex-1">
+            <LeetCodeCard />
+          </div>
+        </div>
+
+        
 
         {/* Topic Grid Section */}
         <div>
@@ -133,10 +147,10 @@ export default function App() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {topics
-            .filter(topic => preferredSlugs.has(topic.slug))
-            .map((topic) => (
-              <TopicItem key={topic.id} topic={topic} score={scores[topic.slug] ?? 0} />
-            ))}
+              .filter(topic => preferredSlugs.has(topic.slug))
+              .map((topic) => (
+                <TopicItem key={topic.id} topic={topic} score={scores[topic.slug] ?? 0} />
+              ))}
           </div>
         </div>
       </div>

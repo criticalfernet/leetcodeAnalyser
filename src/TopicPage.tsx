@@ -7,61 +7,67 @@ import { ArrowLeft, CheckCircle2, Award } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 interface Props {
-    scores: Record<string, number>;
+  scores: Record<string, number>;
 }
 
 export default function TopicPage({ scores }: Props) {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const slug = location.pathname.split("/")[2];
+  const location = useLocation();
+  const navigate = useNavigate();
+  const slug = location.pathname.split("/")[2];
 
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [selected, setSelected] = useState<Set<number>>(new Set());
-    const [done, setDone] = useState<Set<number>>(new Set());
-    const [refresh, setRefresh] = useState(0);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [done, setDone] = useState<Set<number>>(new Set());
+  const [refresh, setRefresh] = useState(0);
+  const [difficultyFilter, setDifficultyFilter] = useState<"All" | "Easy" | "Medium" | "Hard">("All");
 
-    function selectQuestion(id: number) {
-        setSelected((prev) => {
-            const next = new Set(prev);
+  function selectQuestion(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
 
-            if (next.has(id)) {
-                next.delete(id);
-            } else {
-                next.add(id);
-            }
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
 
-            return next;
-        });
-    }
+      return next;
+    });
+  }
 
-    useEffect(() => {
-        (async () => {
-            setQuestions(await getQuestions(slug));
-        })();
-    }, [slug]);
+  useEffect(() => {
+    (async () => {
+      setQuestions(await getQuestions(slug));
+    })();
+  }, [slug]);
 
-    useEffect(() => {
-        (async () => {
-            const data = await getProgressTopic(slug);
-            setDone(new Set(data.questionIds));
-        })();
-    }, [refresh]);
+  useEffect(() => {
+    (async () => {
+      const data = await getProgressTopic(slug);
+      setDone(new Set(data.questionIds));
+    })();
+  }, [refresh]);
 
-    const stats = getTopicStats(questions, done);
+  const stats = getTopicStats(questions, done);
 
-    const chartData = [
-        { name: "Easy", solved: stats.easy, remaining: stats.easyTotal - stats.easy, color: "#10b981" },
-        { name: "Medium", solved: stats.medium, remaining: stats.mediumTotal - stats.medium, color: "#f59e0b" },
-        { name: "Hard", solved: stats.hard, remaining: stats.hardTotal - stats.hard, color: "#ef4444" },
-    ];
+  const chartData = [
+    { name: "Easy", solved: stats.easy, remaining: stats.easyTotal - stats.easy, color: "#10b981" },
+    { name: "Medium", solved: stats.medium, remaining: stats.mediumTotal - stats.medium, color: "#f59e0b" },
+    { name: "Hard", solved: stats.hard, remaining: stats.hardTotal - stats.hard, color: "#ef4444" },
+  ];
 
-    const pieData = [
-        { name: "Easy Solved", value: stats.easy, fill: "#10b981" },
-        { name: "Medium Solved", value: stats.medium, fill: "#f59e0b" },
-        { name: "Hard Solved", value: stats.hard, fill: "#ef4444" },
-    ].filter((item) => item.value > 0);
+  const pieData = [
+    { name: "Easy Solved", value: stats.easy, fill: "#10b981" },
+    { name: "Medium Solved", value: stats.medium, fill: "#f59e0b" },
+    { name: "Hard Solved", value: stats.hard, fill: "#ef4444" },
+  ].filter((item) => item.value > 0);
 
-    return (
+  const filteredQuestions = questions.filter((question) => {
+    if (difficultyFilter === "All") return true;
+    return question.difficulty === difficultyFilter;
+  });
+
+  return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Navigation & Header */}
@@ -96,11 +102,10 @@ export default function TopicPage({ scores }: Props) {
                 setSelected(new Set());
                 setRefresh((prev) => prev + 1);
               }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                selected.size > 0
-                  ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 cursor-pointer"
-                  : "bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed"
-              }`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${selected.size > 0
+                ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 cursor-pointer"
+                : "bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed"
+                }`}
             >
               <CheckCircle2 size={16} /> Mark {selected.size} Completed
             </button>
@@ -141,25 +146,33 @@ export default function TopicPage({ scores }: Props) {
               <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block">
                 Completion breakdown
               </span>
-              {chartData.map((d) => (
-                <div key={d.name} className="space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-slate-300 font-medium">{d.name}</span>
-                    <span className="text-slate-400">
-                      {d.solved} of {d.solved + d.remaining}
-                    </span>
+              {chartData.map((d) => {
+
+                const total = d.solved + d.remaining;
+                const isZeroTotal = total === 0;
+                const percentage = isZeroTotal ? 100 : (d.solved / total) * 100;
+
+                return (
+                  <div key={d.name} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-300 font-medium">{d.name}</span>
+                      <span className="text-slate-400">
+                        {d.solved} of {d.solved + d.remaining}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          backgroundColor: d.color,
+                          width: `${percentage}%`,
+                          opacity: isZeroTotal ? 0.4 : 1
+                        }}
+                      ></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                    <div
-                      className="h-full rounded-full transition-all duration-300"
-                      style={{
-                        backgroundColor: d.color,
-                        width: `${d.solved + d.remaining > 0 ? (d.solved / (d.solved + d.remaining)) * 100 : 0}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 
@@ -203,9 +216,11 @@ export default function TopicPage({ scores }: Props) {
 
         {/* Question Item List */}
         <div className="space-y-3">
-          <h3 className="text-lg font-bold text-white">Questions</h3>
+          {/* Header with Title and Difficulty Action Buttons */}
+          <Top filter={difficultyFilter} onFilterChange={setDifficultyFilter} />
+
           <ul className="space-y-2">
-            {questions.map((question) => (
+            {filteredQuestions.map((question) => (
               <QuestionItem
                 key={question.frontendId}
                 question={question}
@@ -222,34 +237,80 @@ export default function TopicPage({ scores }: Props) {
 }
 
 function getTopicStats(questions: Question[], done: Set<number>) {
-    const total = questions.length;
+  const total = questions.length;
 
-    let easy = 0;
-    let medium = 0;
-    let hard = 0;
+  let easy = 0;
+  let medium = 0;
+  let hard = 0;
 
-    for (const question of questions) {
-        if (question.difficulty === "Easy" && done.has(question.frontendId)) {
-            easy++;
-        }
-
-        if (question.difficulty === "Medium" && done.has(question.frontendId)) {
-            medium++;
-        }
-
-        if (question.difficulty === "Hard" && done.has(question.frontendId)) {
-            hard++;
-        }
+  for (const question of questions) {
+    if (question.difficulty === "Easy" && done.has(question.frontendId)) {
+      easy++;
     }
 
-    return {
-        totalDone: done.size,
-        total,
-        easy,
-        medium,
-        hard,
-        easyTotal: questions.filter((q) => q.difficulty === "Easy").length,
-        mediumTotal: questions.filter((q) => q.difficulty === "Medium").length,
-        hardTotal: questions.filter((q) => q.difficulty === "Hard").length,
-    };
+    if (question.difficulty === "Medium" && done.has(question.frontendId)) {
+      medium++;
+    }
+
+    if (question.difficulty === "Hard" && done.has(question.frontendId)) {
+      hard++;
+    }
+  }
+
+  return {
+    totalDone: done.size,
+    total,
+    easy,
+    medium,
+    hard,
+    easyTotal: questions.filter((q) => q.difficulty === "Easy").length,
+    mediumTotal: questions.filter((q) => q.difficulty === "Medium").length,
+    hardTotal: questions.filter((q) => q.difficulty === "Hard").length,
+  };
+}
+
+interface TopProps {
+  filter: "All" | "Easy" | "Medium" | "Hard";
+  onFilterChange: (difficulty: "All" | "Easy" | "Medium" | "Hard") => void;
+}
+
+function Top({ filter, onFilterChange }: TopProps) {
+  const options: Array<"All" | "Easy" | "Medium" | "Hard"> = ["All", "Easy", "Medium", "Hard"];
+
+  const styles = {
+    All: "text-slate-300 border-slate-700 bg-slate-800/50 hover:bg-slate-800",
+    Easy: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20",
+    Medium: "text-amber-400 border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20",
+    Hard: "text-rose-400 border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20",
+  };
+
+  const activeStyles = {
+    All: "ring-2 ring-slate-400 bg-slate-800",
+    Easy: "ring-2 ring-emerald-500 bg-emerald-500/30",
+    Medium: "ring-2 ring-amber-500 bg-amber-500/30",
+    Hard: "ring-2 ring-rose-500 bg-rose-500/30",
+  };
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <h3 className="text-lg font-bold text-white">Questions</h3>
+
+      <div className="flex items-center gap-2">
+        {options.map((level) => {
+          const isActive = filter === level;
+          return (
+            <button
+              key={level}
+              type="button"
+              onClick={() => onFilterChange(isActive && level !== "All" ? "All" : level)}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${styles[level]
+                } ${isActive ? activeStyles[level] : "opacity-70 hover:opacity-100"}`}
+            >
+              {level}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }

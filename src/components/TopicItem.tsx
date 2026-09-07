@@ -30,14 +30,21 @@ function TopicItem({ topic, score = 0 }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-between items-center">
-        <span className="text-xs text-slate-400">Rating</span>
-        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-          {rating}
-        </span>
-      </div>
+      <Footer rating={rating}></Footer>
     </div>
   );
 }
 
 export default TopicItem;
+
+
+function Footer({ rating }: { rating: number }) {
+  return (
+    <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-between items-center">
+      <span className="text-xs text-slate-400">Rating</span>
+      <span className="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+        {rating}
+      </span>
+    </div>
+  )
+}
