@@ -49,17 +49,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-[var(--background-950)] text-[var(--text-100)] p-6 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-6 gap-4">
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500">
+            <h1 className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[var(--secondary-500)] via-[var(--primary-500)] to-[var(--accent-200)]">
               LEETCODE ANALYZER
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
-              Optimize practice.
-            </p>
           </div>
 
           <button
@@ -70,58 +67,53 @@ export default function App() {
           </button>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 flex flex-col justify-between shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
               <Zap size={140} />
             </div>
 
             <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-4">
-                <Zap size={14} /> Recommendation
-              </span>
-              <h2 className="text-slate-400 font-medium text-sm">Suggested Focus</h2>
+              <h2 className="text-[var(--text-400)] font-medium text-m mb-10">Suggested Topics</h2>
               {recommendedTopics.map((topic) => (
-                <p className="text-[1.2rem] font-bold text-white mt-1 cursor-pointer hover:underline"
+                <p className="text-[1.2rem] font-bold text-[var(--text-50)] hover:underline"
                   onClick={() => navigate(`/topic/${topic.slug}`)}>
                   {topic.name || "N/A"}
                 </p>
               ))}
             </div>
-
-            <div className="mt-6 pt-4 border-t border-slate-800/80">
-            </div>
           </div>
 
-          {/* Metric Stats */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-lg">
+          <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-center mb-4">
-                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">Overall Stats</span>
-                <BookOpen size={18} className="text-slate-400" />
+                <span className="text-[var(--text-400)] font-medium text-m">Overall Stats</span>
+                <BookOpen size={18} className="text-[var(--text-200)]" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
-                  <span className="text-xs text-slate-500">Solved Problems</span>
+                <div className="bg-[var(--secondary-900)] p-4 border border-[var(--secondary-800)]">
+                  <span className="text-xs text-[var(--text-500)]">Solved Problems</span>
                   <p className="text-2xl font-bold text-emerald-400 mt-1">{totalSolved}</p>
                 </div>
-                <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
-                  <span className="text-xs text-slate-500">Total Questions</span>
-                  <p className="text-2xl font-bold text-indigo-400 mt-1">{totalQ}</p>
+                <div className="bg-[var(--secondary-900)] p-4 border border-[var(--secondary-800)]">
+                  <span className="text-xs text-[var(--text-500)]">Total Questions</span>
+                  <p className="text-2xl font-bold text-[var(--accent-100)] mt-1">{totalQ}</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-4">
-              <div className="flex justify-between text-xs text-slate-400 mb-1">
+              <div className="flex justify-between font-semibold text-xs text-[var(--text-300)] mb-1">
                 <span>Coverage</span>
                 <span>{Math.round((topics.length ? (totalSolved / (topics.length * 15)) : 0) * 100)}%</span>
               </div>
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-[var(--secondary-900)] h-2 rounded-full overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full"
-                  style={{ width: `${Math.min(100, Math.round((topics.length ? (totalSolved / (topics.length * 15)) : 0) * 100))}%` }}
+                  className="bg-emerald-400 h-full rounded-full"
+                  style={{ 
+                    width: `${Math.min(100, Math.round((totalSolved / totalQ) * 100))}%` 
+                  }}
                 ></div>
               </div>
             </div>
@@ -145,10 +137,9 @@ export default function App() {
 
 
 
-        {/* Topic Grid Section */}
         <div>
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            Explore Topics
+          <h2 className="text-xl font-bold mb-2">
+            Topics
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {topics
@@ -163,6 +154,8 @@ export default function App() {
   );
 }
 
+
+
 function calculateScores(topics: Topic[], progress: Progress[]): Record<string, number> {
   const scores: Record<string, number> = {};
 
@@ -173,8 +166,9 @@ function calculateScores(topics: Topic[], progress: Progress[]): Record<string, 
   return scores;
 }
 
+
+
 const preferredSlugs = new Set([
-  // Core Data Structures
   "array",
   "string",
   "hash-table",
@@ -183,8 +177,6 @@ const preferredSlugs = new Set([
   "queue",
   "matrix",
   "heap-priority-queue",
-
-  // Trees & Graphs
   "tree",
   "binary-tree",
   "binary-search-tree",
@@ -198,8 +190,6 @@ const preferredSlugs = new Set([
   "dijkstra",
   "prims-algorithm",
   "kruskals-algorithm",
-
-  // Algorithmic Techniques & Patterns
   "two-pointers",
   "sliding-window",
   "binary-search",
@@ -213,17 +203,15 @@ const preferredSlugs = new Set([
   "memoization",
   "divide-and-conquer",
   "bit-manipulation",
-
-  // Advanced & Specialized Data Structures
   "monotonic-stack",
   "monotonic-queue",
   "segment-tree",
   "binary-indexed-tree",
-
-  // Math & Theory
   "number-theory",
   "combinatorics",
 ]);
+
+
 
 function getRecommendedTopics(
   topics: Topic[],

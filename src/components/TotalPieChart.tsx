@@ -44,7 +44,7 @@ export default function TotalPieChart({ topics, progress }: Props) {
   ].filter((item) => item.value > 0);
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-lg flex flex-col justify-between">
+    <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between">
       <Header></Header>
 
       <div className="h-44 w-full">
@@ -66,10 +66,10 @@ export default function TotalPieChart({ topics, progress }: Props) {
 
 function Header() {
   return (<div className="flex justify-between items-center mb-2">
-    <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-      Overall Difficulty Breakdown
+    <span className="text-[var(--text-400)] text-m font-bold uppercase">
+      Questions Breakdown
     </span>
-    <Award size={18} className="text-slate-400" />
+    <Award size={18} className="text-[var(--text-200)]" />
   </div>)
 }
 
@@ -94,8 +94,7 @@ function Chart({chartData} : ChartProp) {
       </Pie>
       <Tooltip
         contentStyle={{
-          backgroundColor: "#0f172a",
-          borderColor: "#334155",
+          backgroundColor: "#131023",
           borderRadius: "8px",
         }}
         itemStyle={{ color: "#f8fafc" }}

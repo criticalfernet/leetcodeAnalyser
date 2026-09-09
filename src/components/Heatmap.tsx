@@ -7,6 +7,15 @@ interface Props {
     progress: Progress[];
 }
 
+const STYLES = [
+    "bg-slate-950/50 border-slate-800/80 text-slate-600",
+    "bg-indigo-900 border-indigo-900/40 text-indigo-400",
+    "bg-indigo-800 border-indigo-700/50 text-indigo-300",
+    "bg-indigo-700 border-indigo-600/60 text-indigo-200",
+    "bg-indigo-600 border-indigo-500/70 text-indigo-100",
+    "bg-indigo-500 border-indigo-400 text-white font-bold ring-1 ring-indigo-400/50"
+]
+
 export default function Heatmap({ progress }: Props) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const today = new Date();
@@ -36,16 +45,16 @@ export default function Heatmap({ progress }: Props) {
     });
 
     const getColorClass = (count: number) => {
-        if (count === 0) return "bg-slate-950/60 border-slate-800/80 text-slate-600";
-        if (count === 1) return "bg-indigo-950/40 border-indigo-900/40 text-indigo-400";
-        if (count === 2) return "bg-indigo-900/40 border-indigo-700/50 text-indigo-300";
-        if (count === 3) return "bg-indigo-700/50 border-indigo-600/60 text-indigo-200";
-        if (count === 4) return "bg-indigo-600/70 border-indigo-500/70 text-indigo-100";
-        return "bg-indigo-600 border-indigo-400 text-white font-bold shadow-md shadow-indigo-500/30 ring-1 ring-indigo-400/50"; // 5+ Tier
+        if (count === 0) return STYLES[0];
+        if (count === 1) return STYLES[1];
+        if (count === 2) return STYLES[2];
+        if (count === 3) return STYLES[3];
+        if (count === 4) return STYLES[4];
+        return STYLES[5];
     };
 
     return (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4 h-full w-full">
+        <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-5 space-y-4 h-full w-full">
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -109,12 +118,12 @@ function Footer() {
         <div className="flex items-center justify-end pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
             <div className="flex items-center gap-1">
                 <span className="text-[10px] text-slate-500 mr-1">Less</span>
-                <div className="w-2.5 h-2.5 rounded-sm bg-slate-950/60 border border-slate-800/80" />
-                <div className="w-2.5 h-2.5 rounded-sm bg-indigo-950/40 border border-indigo-900/40" />
-                <div className="w-2.5 h-2.5 rounded-sm bg-indigo-900/40 border border-indigo-700/50" />
-                <div className="w-2.5 h-2.5 rounded-sm bg-indigo-700/50 border border-indigo-600/60" />
-                <div className="w-2.5 h-2.5 rounded-sm bg-indigo-600/70 border border-indigo-500/70" />
-                <div className="w-2.5 h-2.5 rounded-sm bg-indigo-600 border border-indigo-400" />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[0]}`} />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[1]}`} />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[2]}`} />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[3]}`} />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[4]}`} />
+                <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[5]}`} />
                 <span className="text-[10px] text-slate-500 ml-1">More</span>
             </div>
         </div>

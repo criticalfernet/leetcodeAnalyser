@@ -68,7 +68,7 @@ export default function TopicPage({ scores }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-[#130f10] text-[var(--text-100)] p-6 md:p-10 font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Navigation & Header */}
         <div>
@@ -103,7 +103,7 @@ export default function TopicPage({ scores }: Props) {
                 setRefresh((prev) => prev + 1);
               }}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${selected.size > 0
-                ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 cursor-pointer"
+                ? "bg-[var(--accent-400)] hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 cursor-pointer"
                 : "bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed"
                 }`}
             >
@@ -160,7 +160,7 @@ export default function TopicPage({ scores }: Props) {
                         {d.solved} of {d.solved + d.remaining}
                       </span>
                     </div>
-                    <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                    <div className="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
                       <div
                         className="h-full rounded-full transition-all duration-300"
                         style={{
