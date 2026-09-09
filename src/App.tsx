@@ -160,7 +160,7 @@ function calculateScores(topics: Topic[], progress: Progress[]): Record<string, 
   const scores: Record<string, number> = {};
 
   topics.forEach(topic => {
-    scores[topic.slug] = calculateTopicRating(topic, progress);
+    scores[topic.slug] = calculateTopicRating(topic, progress) * (interviewBias[topic.slug] ?? 1);
   });
 
   return scores;
@@ -233,3 +233,46 @@ function getRecommendedTopics(
         topic !== null
     );
 }
+
+const interviewBias : Record<string,number> = {
+  "array" : 1.02,
+  "string": 1.015,
+  "hash-table" : 1.02,
+  "linked-list": 1.0,
+  "stack" : 1.015,
+  "queue" : 1.015,
+  "matrix" : 1.0,
+  "heap-priority-queue" : 1.025,
+  "tree": 1.02,
+  "binary-tree": 1.02,
+  "binary-search-tree" : 1.02,
+  "graph" : 1.035,
+  "trie": 1.0,
+  "union-find" : 1.0,
+  "depth-first-search": 1.025,
+  "breadth-first-search": 1.025,
+  "topological-sort": 1.0,
+  "shortest-path" : 1.005,
+  "dijkstra" : 0.995,
+  "prims-algorithm": 0.99,
+  "kruskals-algorithm" : 0.99,
+  "two-pointers" : 1.02,
+  "sliding-window" : 1.02,
+  "binary-search" : 1.025,
+  "prefix-sum": 1.02,
+  "backtracking": 1.015,
+  "recursion" : 1.0,
+  "sorting": 1.01,
+  "greedy": 1.02,
+  "dynamic-programming": 1.035,
+  "dp-on-trees": 1.0,
+  "memoization": 1.02,
+  "divide-and-conquer": 1.0,
+  "bit-manipulation": 1.0,
+  "monotonic-stack": 1.005,
+  "monotonic-queue": 1.01,
+  "segment-tree": 0.99,
+  "binary-indexed-tree":0.99,
+  "number-theory" : 0.99,
+  "combinatorics": 0.99,
+};
