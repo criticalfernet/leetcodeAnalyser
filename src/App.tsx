@@ -9,6 +9,8 @@ import TotalPieChart from "./components/TotalPieChart";
 import { BookOpen, Zap } from "lucide-react";
 import Heatmap from "./components/Heatmap";
 import LeetCodeCard from "./components/LeetCodeCard";
+import { getPreferredSlugs, interviewBias } from "./interviewBias";
+import "./styles/app.css"
 
 export default function App() {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -49,34 +51,33 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background-950)] text-[var(--text-100)] p-6 font-sans">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-6 gap-4">
+    <div className="main_container_outer">
+      <div className="main_container_inner">
+        <header>
           <div>
-            <h1 className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[var(--secondary-500)] via-[var(--primary-500)] to-[var(--accent-200)]">
+            <h1 className="title_main">
               LEETCODE ANALYZER
             </h1>
           </div>
 
           <button
             onClick={() => window.location.reload()}
-            className="self-start md:self-auto bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-medium transition-colors border border-slate-700 shadow-sm"
+            className="sync_button"
           >
             Sync Progress
           </button>
         </header>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
-              <Zap size={140} />
+        <div className="grid-container">
+          <div className="header-card">
+            <div className="zap-card-decoration">
+              <Zap size={180} />
             </div>
 
             <div>
-              <h2 className="text-[var(--text-400)] font-medium text-m mb-10">Suggested Topics</h2>
+              <h2>Suggested Topics</h2>
               {recommendedTopics.map((topic) => (
-                <p className="text-[1.2rem] font-bold text-[var(--text-50)] hover:underline"
+                <p className="hover:underline"
                   onClick={() => navigate(`/topic/${topic.slug}`)}>
                   {topic.name || "N/A"}
                 </p>
@@ -84,35 +85,35 @@ export default function App() {
             </div>
           </div>
 
-          <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between">
+          <div className="header-card">
             <div>
               <div className="flex justify-between items-center mb-4">
-                <span className="text-[var(--text-400)] font-medium text-m">Overall Stats</span>
-                <BookOpen size={18} className="text-[var(--text-200)]" />
+                <span className="text-[var(--text)] font-bold">Overall Stats</span>
+                <BookOpen size={18} className="text-[var(--text)]" />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[var(--secondary-900)] p-4 border border-[var(--secondary-800)]">
-                  <span className="text-xs text-[var(--text-500)]">Solved Problems</span>
-                  <p className="text-2xl font-bold text-emerald-400 mt-1">{totalSolved}</p>
+              <div className="stats-container">
+                <div className="sub-container">
+                  <span >Solved Problems</span>
+                  <p>{totalSolved}</p>
                 </div>
-                <div className="bg-[var(--secondary-900)] p-4 border border-[var(--secondary-800)]">
-                  <span className="text-xs text-[var(--text-500)]">Total Questions</span>
+                <div className="sub-container">
+                  <span>Total Questions</span>
                   <p className="text-2xl font-bold text-[var(--accent-100)] mt-1">{totalQ}</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4">
-              <div className="flex justify-between font-semibold text-xs text-[var(--text-300)] mb-1">
+            <div className="stats-coverage">
+              <div className="bar-labels">
                 <span>Coverage</span>
-                <span>{Math.round((topics.length ? (totalSolved / (topics.length * 15)) : 0) * 100)}%</span>
+                <span>{Math.round((totalQ ? (totalSolved / totalQ) : 0) * 100)}%</span>
               </div>
-              <div className="w-full bg-[var(--secondary-900)] h-2 rounded-full overflow-hidden">
+              <div className="stats-bar">
                 <div
-                  className="bg-emerald-400 h-full rounded-full"
-                  style={{ 
-                    width: `${Math.min(100, Math.round((totalSolved / totalQ) * 100))}%` 
+                  className="bg-emerald-500 h-full rounded-full"
+                  style={{
+                    width: `${Math.min(100, Math.round((totalSolved / totalQ) * 100))}%`
                   }}
                 ></div>
               </div>
@@ -125,23 +126,18 @@ export default function App() {
 
 
 
-        <div className="flex flex-col lg:flex-row gap-10 items-stretch w-full">
-          <div className="flex-[1.5]">
-            <Heatmap progress={progress} />
-          </div>
-
-          <div className="flex-1">
-            <LeetCodeCard />
-          </div>
+        <div className="grid-container-2">
+          <Heatmap progress={progress} />
+          <LeetCodeCard />
         </div>
 
 
 
         <div>
-          <h2 className="text-xl font-bold mb-2">
+          <h2 className="font-bold mb-2 text-[var(--text)]">
             Topics
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="topics-container">
             {topics
               .filter(topic => preferredSlugs.has(topic.slug))
               .map((topic) => (
@@ -168,48 +164,7 @@ function calculateScores(topics: Topic[], progress: Progress[]): Record<string, 
 
 
 
-const preferredSlugs = new Set([
-  "array",
-  "string",
-  "hash-table",
-  "linked-list",
-  "stack",
-  "queue",
-  "matrix",
-  "heap-priority-queue",
-  "tree",
-  "binary-tree",
-  "binary-search-tree",
-  "graph",
-  "trie",
-  "union-find",
-  "depth-first-search",
-  "breadth-first-search",
-  "topological-sort",
-  "shortest-path",
-  "dijkstra",
-  "prims-algorithm",
-  "kruskals-algorithm",
-  "two-pointers",
-  "sliding-window",
-  "binary-search",
-  "prefix-sum",
-  "backtracking",
-  "recursion",
-  "sorting",
-  "greedy",
-  "dynamic-programming",
-  "dp-on-trees",
-  "memoization",
-  "divide-and-conquer",
-  "bit-manipulation",
-  "monotonic-stack",
-  "monotonic-queue",
-  "segment-tree",
-  "binary-indexed-tree",
-  "number-theory",
-  "combinatorics",
-]);
+const preferredSlugs = getPreferredSlugs();
 
 
 
@@ -233,46 +188,3 @@ function getRecommendedTopics(
         topic !== null
     );
 }
-
-const interviewBias : Record<string,number> = {
-  "array" : 1.02,
-  "string": 1.015,
-  "hash-table" : 1.02,
-  "linked-list": 1.0,
-  "stack" : 1.015,
-  "queue" : 1.015,
-  "matrix" : 1.0,
-  "heap-priority-queue" : 1.025,
-  "tree": 1.02,
-  "binary-tree": 1.02,
-  "binary-search-tree" : 1.02,
-  "graph" : 1.035,
-  "trie": 1.0,
-  "union-find" : 1.0,
-  "depth-first-search": 1.025,
-  "breadth-first-search": 1.025,
-  "topological-sort": 1.0,
-  "shortest-path" : 1.005,
-  "dijkstra" : 0.995,
-  "prims-algorithm": 0.99,
-  "kruskals-algorithm" : 0.99,
-  "two-pointers" : 1.02,
-  "sliding-window" : 1.02,
-  "binary-search" : 1.025,
-  "prefix-sum": 1.02,
-  "backtracking": 1.015,
-  "recursion" : 1.0,
-  "sorting": 1.01,
-  "greedy": 1.02,
-  "dynamic-programming": 1.035,
-  "dp-on-trees": 1.0,
-  "memoization": 1.02,
-  "divide-and-conquer": 1.0,
-  "bit-manipulation": 1.0,
-  "monotonic-stack": 1.005,
-  "monotonic-queue": 1.01,
-  "segment-tree": 0.99,
-  "binary-indexed-tree":0.99,
-  "number-theory" : 0.99,
-  "combinatorics": 0.99,
-};

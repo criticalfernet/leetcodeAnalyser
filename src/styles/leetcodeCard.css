@@ -1,0 +1,37 @@
+.lc-header-icon-1 {
+    padding: 0.625rem;
+    border-radius: 0.75rem;
+    background: var(--primary-300);
+    border: 1px solid var(--primary-400);
+}
+
+.lc-header-icon-2 {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+
+    background: var(--primary-300);
+    border: 1px solid var(--primary-400);
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.lc-header-icon-2:hover {
+    background: var(--primary-400);
+    border: 1px solid var(--primary-500);
+}
+
+.header-card p.lc-p {
+    color: var(--text-800);
+    font-weight: 600;
+    font-size: 1rem;
+}

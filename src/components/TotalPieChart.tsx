@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recha
 import { Award } from "lucide-react";
 import { getQuestionsAll } from "../api";
 import type { Progress, Topic } from "../types";
+import '../styles/totalPieChart.css'
 
 interface Props {
   topics: Topic[];
@@ -38,24 +39,24 @@ export default function TotalPieChart({ topics, progress }: Props) {
   }, [topics, progress]);
 
   const chartData = [
-    { name: "Easy", value: counts.easy, fill: "#10b981" },
-    { name: "Medium", value: counts.medium, fill: "#f59e0b" },
-    { name: "Hard", value: counts.hard, fill: "#ef4444" },
+    { name: "Easy", value: counts.easy, fill: "#2f9e5b" },
+    { name: "Medium", value: counts.medium, fill: "#c9942a" },
+    { name: "Hard", value: counts.hard, fill: "#d65353" },
   ].filter((item) => item.value > 0);
 
   return (
-    <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-6 flex flex-col justify-between">
+    <div className="header-card secondary-card">
       <Header></Header>
 
-      <div className="h-44 w-full">
+      <div className="h-full w-full">
         {loading ? (
-          <div className="h-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-500"></div>
+          <div className="center-content">
+            <div className="graph-loading-circle"></div>
           </div>
         ) : chartData.length > 0 ? (
           <Chart chartData={chartData}></Chart>
         ) : (
-          <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+          <div className="center-content text-[var(--text-800)]">
             No solved questions recorded yet
           </div>
         )}
@@ -66,10 +67,10 @@ export default function TotalPieChart({ topics, progress }: Props) {
 
 function Header() {
   return (<div className="flex justify-between items-center mb-2">
-    <span className="text-[var(--text-400)] text-m font-bold uppercase">
+    <span className="text-[var(--text-950)] font-extrabold uppercase">
       Questions Breakdown
     </span>
-    <Award size={18} className="text-[var(--text-200)]" />
+    <Award size={18} className="text-[var(--text-950)] font-bold" />
   </div>)
 }
 
@@ -85,7 +86,6 @@ function Chart({chartData} : ChartProp) {
         cy="50%"
         innerRadius={45}
         outerRadius={65}
-        paddingAngle={4}
         dataKey="value"
       >
         {chartData.map((entry, index) => (
@@ -94,13 +94,14 @@ function Chart({chartData} : ChartProp) {
       </Pie>
       <Tooltip
         contentStyle={{
-          backgroundColor: "#131023",
+          backgroundColor: "#2b261c",
+          border: "1px solid #5c5039",
           borderRadius: "8px",
         }}
-        itemStyle={{ color: "#f8fafc" }}
+        itemStyle={{ color: "#f2e9d9" }}
       />
       <Legend
-        wrapperStyle={{ fontSize: "12px", paddingTop: "4px" }}
+        wrapperStyle={{ fontSize: "0.8rem", paddingTop: "0.2rem" }}
         iconSize={8}
       />
     </PieChart>

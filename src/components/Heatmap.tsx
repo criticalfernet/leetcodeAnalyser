@@ -2,19 +2,20 @@ import { addMonths, format, getDaysInMonth, isSameMonth, subMonths, parseISO, is
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { useState } from "react";
 import type { Progress } from "../types";
+import '../styles/heatmap.css'
 
 interface Props {
     progress: Progress[];
 }
 
 const STYLES = [
-    "bg-slate-950/50 border-slate-800/80 text-slate-600",
-    "bg-indigo-900 border-indigo-900/40 text-indigo-400",
-    "bg-indigo-800 border-indigo-700/50 text-indigo-300",
-    "bg-indigo-700 border-indigo-600/60 text-indigo-200",
-    "bg-indigo-600 border-indigo-500/70 text-indigo-100",
-    "bg-indigo-500 border-indigo-400 text-white font-bold ring-1 ring-indigo-400/50"
-]
+  "bg-[#1b2115] border-[#303c24] text-[#667255]",
+  "bg-[#26301c] border-[#4b5f37] text-[#8fa47a]",
+  "bg-[#304321] border-[#566f3d] text-[#a8bd91]",
+  "bg-[#3b5228] border-[#63804a] text-[#c0d2aa]",
+  "bg-[#4b6330] border-[#76945a] text-[#d7e4c5]",
+  "bg-[#5b7539] border-[#8ba96b] text-[#f1f4ec] font-bold ring-1 ring-[#8ba96b]/50",
+];
 
 export default function Heatmap({ progress }: Props) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -54,18 +55,18 @@ export default function Heatmap({ progress }: Props) {
     };
 
     return (
-        <div className="bg-[var(--primary-800)] border border-[var(--primary-600)] rounded-xl p-5 space-y-4 h-full w-full">
+        <div className="header-card heatmap-card">
 
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <Calendar size={16} className="text-indigo-400" />
-                    <h2 className="text-sm font-bold text-white tracking-wider">{format(currentMonth, "MMM yyyy")}</h2>
+                <div className="flex items-center gap-1">
+                    <Calendar size={22} className="text-[#f0eadb]" />
+                    <h3 className="font-semibold text-[#f0eadb]">{format(currentMonth, "MMM yyyy")}</h3>
                 </div>
 
                 <div className="flex items-center gap-1.5">
                     <button
                         type="button"
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 transition-colors cursor-pointer"
+                        className="heatmap-nav-button"
                         title="Previous Month"
                         onClick={handlePrevMonth}
                     >
@@ -73,7 +74,7 @@ export default function Heatmap({ progress }: Props) {
                     </button>
                     <button
                         type="button"
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="heatmap-nav-button"
                         title="Next Month"
                         onClick={handleNextMonth}
                         disabled={isNextDisabled}
@@ -89,7 +90,7 @@ export default function Heatmap({ progress }: Props) {
                 {monthData.map((item) => (
                     <div
                         key={item.day}
-                        className={`group relative h-8 rounded-lg border flex items-center justify-center transition-all duration-150 hover:scale-110 hover:z-10 cursor-pointer ${getColorClass(
+                        className={`heatmap-cell ${getColorClass(
                             item.count
                         )}`}
                     >
@@ -117,14 +118,14 @@ function Footer() {
     return (
         <div className="flex items-center justify-end pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
             <div className="flex items-center gap-1">
-                <span className="text-[10px] text-slate-500 mr-1">Less</span>
+                <span className="text-[10px] text-[var(--text-700)] mr-1">Less</span>
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[0]}`} />
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[1]}`} />
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[2]}`} />
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[3]}`} />
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[4]}`} />
                 <div className= {`w-2.5 h-2.5 rounded-sm ${STYLES[5]}`} />
-                <span className="text-[10px] text-slate-500 ml-1">More</span>
+                <span className="text-[10px] text-[var(--text-700)] ml-1">More</span>
             </div>
         </div>
     )

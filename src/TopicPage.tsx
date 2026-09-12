@@ -68,7 +68,7 @@ export default function TopicPage({ scores }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-[#130f10] text-[var(--text-100)] p-6 md:p-10 font-sans">
+    <div className="min-h-screen bg-[var(--background-950)] text-[var(--text-100)] p-6 md:p-10 font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Navigation & Header */}
         <div>
