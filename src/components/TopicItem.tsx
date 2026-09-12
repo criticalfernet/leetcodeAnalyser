@@ -23,7 +23,7 @@ function TopicItem({ topic, score = 0 }: Props) {
             {topic.name}
           </h4>
           <span className="topic-slug">
-            {topic.slug.replace("-", " ")}
+            {topic.slug.replace(/-/g, " ")}
           </span>
         </div>
         <div className="topic-navigate-icon">

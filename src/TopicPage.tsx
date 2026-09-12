@@ -83,7 +83,7 @@ export default function TopicPage({ scores }: Props) {
           <div className="topic-header">
             <div>
               <h1 className="font-extrabold capitalize text-[var(--text-50)] tracking-tight">
-                {slug.replace("-", " ")}
+                {slug.replace(/-/g, " ")}
               </h1>
               <p className="rating-container">
                 <Award size={16} className="text-[var(--accent-300)]" />
