@@ -5,6 +5,7 @@ import { getProgressTopic, getQuestions, markQuestionDone } from "./api";
 import QuestionItem from "./components/QuestionItem";
 import { ArrowLeft, CheckCircle2, Award } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import './styles/topicPage.css'
 
 interface Props {
   scores: Record<string, number>;
@@ -68,26 +69,26 @@ export default function TopicPage({ scores }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--background-950)] text-[var(--text-100)] p-6 md:p-10 font-sans">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Navigation & Header */}
+    <div className="main-container-outer">
+      <div className="main-container-inner">
+
         <div>
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors mb-4 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 w-fit"
+            className="back-button"
           >
             <ArrowLeft size={14} /> Back to Dashboard
           </button>
 
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+          <div className="topic-header">
             <div>
-              <h1 className="text-3xl font-extrabold capitalize text-white tracking-tight">
+              <h1 className="font-extrabold capitalize text-[var(--text-50)] tracking-tight">
                 {slug.replace("-", " ")}
               </h1>
-              <p className="text-sm text-slate-400 mt-1 flex items-center gap-2">
-                <Award size={16} className="text-indigo-400" />
-                Topic Rank Rating:{" "}
-                <span className="font-semibold text-indigo-300">
+              <p className="rating-container">
+                <Award size={16} className="text-[var(--accent-300)]" />
+                Topic Rating:{" "}
+                <span className="font-semibold text-[var(--accent-400)]">
                   {Math.round((scores[slug] ?? 0) * 2000)}
                 </span>
               </p>
@@ -102,83 +103,27 @@ export default function TopicPage({ scores }: Props) {
                 setSelected(new Set());
                 setRefresh((prev) => prev + 1);
               }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${selected.size > 0
-                ? "bg-[var(--accent-400)] hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 cursor-pointer"
-                : "bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed"
-                }`}
+              className={`complete-button ${selected.size > 0 ? "active" : "disabled"}`}
             >
               <CheckCircle2 size={16} /> Mark {selected.size} Completed
             </button>
           </div>
         </div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Numerical Stats Cards */}
+        <div className="dashboard-grid">
+
           <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-              <span className="text-xs text-slate-400 block mb-1">Total Solved</span>
-              <p className="text-2xl font-bold text-white">
-                {stats.totalDone} <span className="text-xs font-normal text-slate-500">/ {stats.total}</span>
-              </p>
-            </div>
-            <div className="bg-slate-900 border border-emerald-500/20 p-4 rounded-xl">
-              <span className="text-xs text-emerald-400 block mb-1">Easy</span>
-              <p className="text-2xl font-bold text-emerald-300">
-                {stats.easy} <span className="text-xs font-normal text-slate-500">/ {stats.easyTotal}</span>
-              </p>
-            </div>
-            <div className="bg-slate-900 border border-amber-500/20 p-4 rounded-xl">
-              <span className="text-xs text-amber-400 block mb-1">Medium</span>
-              <p className="text-2xl font-bold text-amber-300">
-                {stats.medium} <span className="text-xs font-normal text-slate-500">/ {stats.mediumTotal}</span>
-              </p>
-            </div>
-            <div className="bg-slate-900 border border-rose-500/20 p-4 rounded-xl">
-              <span className="text-xs text-rose-400 block mb-1">Hard</span>
-              <p className="text-2xl font-bold text-rose-300">
-                {stats.hard} <span className="text-xs font-normal text-slate-500">/ {stats.hardTotal}</span>
-              </p>
-            </div>
+            <Numericalcards stats={stats} dtype={"All"} />
+            <Numericalcards stats={stats} dtype={"Easy"} />
+            <Numericalcards stats={stats} dtype={"Medium"} />
+            <Numericalcards stats={stats} dtype={"Hard"} />
 
-            {/* Custom Progress Bar Chart Overlay */}
-            <div className="col-span-2 sm:col-span-4 bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
-              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block">
-                Completion breakdown
-              </span>
-              {chartData.map((d) => {
-
-                const total = d.solved + d.remaining;
-                const isZeroTotal = total === 0;
-                const percentage = isZeroTotal ? 100 : (d.solved / total) * 100;
-
-                return (
-                  <div key={d.name} className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-slate-300 font-medium">{d.name}</span>
-                      <span className="text-slate-400">
-                        {d.solved} of {d.solved + d.remaining}
-                      </span>
-                    </div>
-                    <div className="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
-                      <div
-                        className="h-full rounded-full transition-all duration-300"
-                        style={{
-                          backgroundColor: d.color,
-                          width: `${percentage}%`,
-                          opacity: isZeroTotal ? 0.4 : 1
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+            <Breakdown chartData={chartData} />
           </div>
 
           {/* Recharts Pie Visualization */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col items-center justify-center min-h-[220px]">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2 self-start">
+          <div className="solved-chart">
+            <span className="text-xs font-semibold text-[var(--primary-300)] uppercase tracking-wider mb-2 self-start">
               Solved Distribution
             </span>
             {pieData.length > 0 ? (
@@ -191,7 +136,6 @@ export default function TopicPage({ scores }: Props) {
                       cy="50%"
                       innerRadius={35}
                       outerRadius={55}
-                      paddingAngle={5}
                       dataKey="value"
                     >
                       {pieData.map((entry, index) => (
@@ -199,24 +143,27 @@ export default function TopicPage({ scores }: Props) {
                       ))}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ backgroundColor: "#0f172a", borderColor: "#334155", borderRadius: "8px" }}
-                      itemStyle={{ color: "#f8fafc" }}
+                      contentStyle={{
+                        backgroundColor: "#2c2924",
+                        border: "1px solid #92846c",
+                        borderRadius: "8px",
+                      }}
+                      itemStyle={{ color: "#f2e9d9" }}
                     />
                     <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="text-center py-8 text-slate-500 text-xs">
+              <div className="text-center py-8 text-[var(--primary-100)] text-xs">
                 No solved questions in this topic yet.
               </div>
             )}
           </div>
         </div>
 
-        {/* Question Item List */}
+
         <div className="space-y-3">
-          {/* Header with Title and Difficulty Action Buttons */}
           <Top filter={difficultyFilter} onFilterChange={setDifficultyFilter} />
 
           <ul className="space-y-2">
@@ -236,7 +183,19 @@ export default function TopicPage({ scores }: Props) {
   );
 }
 
-function getTopicStats(questions: Question[], done: Set<number>) {
+
+interface StatsType {
+  totalDone: number;
+  total: number;
+  easy: number;
+  medium: number;
+  hard: number;
+  easyTotal: number;
+  mediumTotal: number;
+  hardTotal: number;
+}
+
+function getTopicStats(questions: Question[], done: Set<number>): StatsType {
   const total = questions.length;
 
   let easy = 0;
@@ -278,22 +237,22 @@ function Top({ filter, onFilterChange }: TopProps) {
   const options: Array<"All" | "Easy" | "Medium" | "Hard"> = ["All", "Easy", "Medium", "Hard"];
 
   const styles = {
-    All: "text-slate-300 border-slate-700 bg-slate-800/50 hover:bg-slate-800",
-    Easy: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20",
-    Medium: "text-amber-400 border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20",
-    Hard: "text-rose-400 border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20",
+    All: "text-stone-200 border-stone-400/40 bg-stone-200/15 hover:bg-stone-200/25",
+    Easy: "text-teal-300 border-teal-500/40 bg-teal-500/20 hover:bg-teal-500/30",
+    Medium: "text-amber-300 border-amber-500/40 bg-amber-500/20 hover:bg-amber-500/30",
+    Hard: "text-rose-300 border-rose-500/40 bg-rose-500/20 hover:bg-rose-500/30",
   };
 
   const activeStyles = {
-    All: "ring-2 ring-slate-400 bg-slate-800",
-    Easy: "ring-2 ring-emerald-500 bg-emerald-500/30",
+    All: "ring-2 ring-stone-300 bg-stone-200/30",
+    Easy: "ring-2 ring-teal-500 bg-teal-500/30",
     Medium: "ring-2 ring-amber-500 bg-amber-500/30",
     Hard: "ring-2 ring-rose-500 bg-rose-500/30",
   };
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <h3 className="text-lg font-bold text-white">Questions</h3>
+      <h3 className="text-lg font-bold text-[var(--text-50)]">Questions</h3>
 
       <div className="flex items-center gap-2">
         {options.map((level) => {
@@ -313,4 +272,90 @@ function Top({ filter, onFilterChange }: TopProps) {
       </div>
     </div>
   );
+}
+
+
+function Numericalcards({ stats, dtype }: { stats: StatsType, dtype: string }) {
+
+  const accentColor =
+    dtype === "Easy"
+      ? "#0f9568"
+      : dtype === "Medium"
+        ? "#b77504"
+        : dtype === "Hard"
+          ? "#e32e2e"
+          : "var(--text-900)";
+
+  const borderColor = accentColor;
+
+  function getTitle(diff: string) {
+    if (diff === "All") return "Total Solved";
+    return diff;
+  }
+
+  function getStats(diff: string) {
+    if (diff === "All") return <p className="text-2xl font-bold">
+      {stats.totalDone} <span className="text-xs font-normal text-[var(--text-800)]">/ {stats.total}</span>
+    </p>;
+    if (diff === "Easy") return <p className="text-2xl font-bold">
+      {stats.easy} <span className="text-xs font-normal text-[var(--text-800)]">/ {stats.easyTotal}</span>
+    </p>;
+    if (diff === "Medium") return <p className="text-2xl font-bold">
+      {stats.medium} <span className="text-xs font-normal text-[var(--text-800)]">/ {stats.mediumTotal}</span>
+    </p>;
+    if (diff === "Hard") return <p className="text-2xl font-bold">
+      {stats.hard} <span className="text-xs font-normal text-[var(--text-800)]">/ {stats.hardTotal}</span>
+    </p>;
+  }
+
+  return (
+    <div className="numerical-card" style={{ color: accentColor, borderColor: borderColor }}>
+      <span className="text-xs font-bold block mb-1">{getTitle(dtype)}</span>
+      {getStats(dtype)}
+    </div>
+  )
+}
+
+interface chartType {
+  name: string;
+  solved: number;
+  remaining: number;
+  color: string;
+}
+
+function Breakdown({ chartData }: { chartData: chartType[] }) {
+  return (
+    <div className="completion-breakdown">
+      <span className="completion-title">
+        Completion breakdown
+      </span>
+      {chartData.map((d) => {
+
+        const total = d.solved + d.remaining;
+        const isZeroTotal = total === 0;
+        const percentage = isZeroTotal ? 100 : (d.solved / total) * 100;
+
+        return (
+          <div key={d.name} className="space-y-1">
+            <div className="completion-label">
+              <span className="text-[var(--text-700)] font-semibold">{d.name}</span>
+              <span className="text-[var(--text-700)]">
+                {d.solved} of {d.solved + d.remaining}
+              </span>
+            </div>
+            <div className="completion-bar">
+              <div
+                className="completion-fill"
+                style={{
+                  backgroundColor: d.color,
+                  width: `${percentage}%`,
+                  opacity: isZeroTotal ? 0.4 : 1
+                }}
+              ></div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }

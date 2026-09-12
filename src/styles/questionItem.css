@@ -1,0 +1,23 @@
+.question-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid;
+
+    transition: all 0.15s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-item {
+    color: #9b8a68;
+}
+
+.checkmark {
+  background: rgba(103, 150, 191, 0.5);
+  color: #6fafe1;
+  border: 1px solid #6fafe188;
+}
