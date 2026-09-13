@@ -51,18 +51,18 @@ export default function App() {
   }
 
   return (
-    <div className="main_container_outer">
-      <div className="main_container_inner">
+    <div className="main-container-outer">
+      <div className="main-container-inner">
         <header>
           <div>
-            <h1 className="title_main">
-              LEETCODE ANALYZER
+            <h1 className="title-main">
+              ALGO Compass
             </h1>
           </div>
 
           <button
             onClick={() => window.location.reload()}
-            className="sync_button"
+            className="sync-button"
           >
             Sync Progress
           </button>

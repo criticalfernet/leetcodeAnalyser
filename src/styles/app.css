@@ -1,11 +1,11 @@
 @import "./styles.css";
 
-.main_container_outer {
+.main-container-outer {
     background-color: var(--background);
     min-height: 100vh;
 }
 
-.main_container_inner {
+.main-container-inner {
     max-width: 90vw;
     margin: 0 auto;
     display: flex;
@@ -30,20 +30,20 @@ header {
     }
 }
 
-.title_main {
+.title-main {
     font-weight: 900;
     letter-spacing: -0.025em;
 
     color: transparent;
     background: linear-gradient(to right,
             var(--primary),
-            var(--accent) 50%,
+            var(--accent) 70%,
             var(--secondary-500));
 
     background-clip: text;
 }
 
-.sync_button {
+.sync-button {
     background: linear-gradient(to right,
             var(--accent-800) 30%,
             var(--secondary-700));
@@ -56,7 +56,7 @@ header {
     transition: 0.2s;
 }
 
-.sync_button:hover {
+.sync-button:hover {
     background: linear-gradient(to right,
             var(--accent-700) 30%,
             var(--secondary-600));
