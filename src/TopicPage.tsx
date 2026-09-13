@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import type { Question } from "./types";
 import { getProgressTopic, getQuestions, markQuestionDone } from "./api";
 import QuestionItem from "./components/QuestionItem";
-import { ArrowLeft, CheckCircle2, Award } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Award, Search } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import './styles/topicPage.css'
 
@@ -21,6 +21,7 @@ export default function TopicPage({ scores }: Props) {
   const [done, setDone] = useState<Set<number>>(new Set());
   const [refresh, setRefresh] = useState(0);
   const [difficultyFilter, setDifficultyFilter] = useState<"All" | "Easy" | "Medium" | "Hard">("All");
+  const [search, setSearch] = useState("");
 
   function selectQuestion(id: number) {
     setSelected((prev) => {
@@ -64,8 +65,11 @@ export default function TopicPage({ scores }: Props) {
   ].filter((item) => item.value > 0);
 
   const filteredQuestions = questions.filter((question) => {
-    if (difficultyFilter === "All") return true;
-    return question.difficulty === difficultyFilter;
+    const matchesDifficulty = difficultyFilter === "All" || question.difficulty === difficultyFilter;
+    const matchesSearch = question.title.toLowerCase().includes(search.toLowerCase()) ||
+      question.frontendId.toString() === search.trim();
+
+    return matchesDifficulty && matchesSearch;
   });
 
   return (
@@ -164,7 +168,7 @@ export default function TopicPage({ scores }: Props) {
 
 
         <div className="space-y-3">
-          <Top filter={difficultyFilter} onFilterChange={setDifficultyFilter} />
+          <Top filter={difficultyFilter} onFilterChange={setDifficultyFilter} search={search} onSearchChange={setSearch} />
 
           <ul className="space-y-2">
             {filteredQuestions.map((question) => (
@@ -231,9 +235,11 @@ function getTopicStats(questions: Question[], done: Set<number>): StatsType {
 interface TopProps {
   filter: "All" | "Easy" | "Medium" | "Hard";
   onFilterChange: (difficulty: "All" | "Easy" | "Medium" | "Hard") => void;
+  search: string;
+  onSearchChange: (search: string) => void;
 }
 
-function Top({ filter, onFilterChange }: TopProps) {
+function Top({ filter, onFilterChange, search, onSearchChange }: TopProps) {
   const options: Array<"All" | "Easy" | "Medium" | "Hard"> = ["All", "Easy", "Medium", "Hard"];
 
   const styles = {
@@ -252,7 +258,17 @@ function Top({ filter, onFilterChange }: TopProps) {
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <h3 className="text-lg font-bold text-[var(--text-50)]">Questions</h3>
+      <div className="flex items-center gap-3">
+        <h3 className="text-lg font-bold text-[var(--text-50)]">Questions</h3>
+
+        <input
+          type="text"
+          placeholder="Search questions..."
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="question-search"
+        />
+      </div>
 
       <div className="flex items-center gap-2">
         {options.map((level) => {

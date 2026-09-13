@@ -170,3 +170,23 @@
 
     min-height: 220px;
 }
+
+.question-search {
+  width: 14rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(168, 154, 125, 0.4);
+  background-color: rgba(231, 220, 198, 0.1);
+  color: var(--text-50);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.question-search::placeholder {
+  color: var(--text-200);
+}
+
+.question-search:focus {
+  border-color: rgba(214, 203, 180, 0.7);
+}
