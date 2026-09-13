@@ -1,8 +1,18 @@
 .topic-card {
     position: relative;
-    background: var(--secondary-800);
     border-radius: 0.5rem;
     padding: 1.25rem 1rem;
+
+    background: linear-gradient(
+        135deg,
+        var(--secondary-900) 0%,
+        var(--secondary-800) 25%,
+        var(--secondary-700) 50%,
+        var(--secondary-700) 100%
+    );
+
+    background-size: 200% 200%;
+    background-attachment: fixed;
 
     display: flex;
     flex-direction: column;
@@ -12,8 +22,13 @@
     transition: all 0.1s;
 }
 
+
 .topic-card:hover {
-    background: var(--secondary-700);
+    background: linear-gradient(
+        135deg,
+        var(--secondary-600),
+        var(--secondary-600)
+    );
 
     .topic-name {
         color: white;

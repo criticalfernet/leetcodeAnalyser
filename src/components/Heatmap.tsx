@@ -97,11 +97,10 @@ export default function Heatmap({ progress }: Props) {
                         <span className="text-[11px] font-mono">{item.day}</span>
 
                         {/* Hover Tooltip */}
-                        <div className="absolute -top-8 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                            <span className="bg-slate-950 border border-slate-700 text-slate-200 text-[10px] px-2 py-0.5 rounded shadow-xl whitespace-nowrap">
+                        <div className="heatmap-tooltip">
+                            <span className="heatmap-tooltip-text">
                                 Day {item.day}: {item.count} solved
                             </span>
-                            <div className="w-1 h-1 bg-slate-950 border-r border-b border-slate-700 rotate-45 -mt-0.5"></div>
                         </div>
                     </div>
                 ))}
