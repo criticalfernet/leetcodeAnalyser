@@ -20,6 +20,7 @@ const query = `
       data {
         questionFrontendId
         title
+        titleSlug
         difficulty
         topicTags {
             name
@@ -72,7 +73,7 @@ async function fetchQuestions(skip) {
   return result.data.questionList;
 };
 
-//const DEV_HARD_LIMIT = 40;
+// const DEV_HARD_LIMIT = 100;
 export async function fetchAllQuestions(initialSkip = 0) {
   const questions = [];
 
@@ -189,6 +190,7 @@ async function seedQuestion(question) {
     create: {
       frontendId: Number(question.questionFrontendId),
       title: question.title,
+      titleSlug: question.titleSlug,
       difficulty: question.difficulty,
     },
   });

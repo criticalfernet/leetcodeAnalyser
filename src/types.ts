@@ -8,6 +8,7 @@ export interface Topic {
 export interface Question {
     frontendId : number;
     title : string;
+    titleSlug : string;
     difficulty : "Medium" | "Easy" | "Hard";
 }
 

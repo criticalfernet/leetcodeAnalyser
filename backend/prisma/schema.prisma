@@ -11,6 +11,7 @@ model Question {
   id         Int                    @id @default(autoincrement())
   frontendId Int                    @unique
   title      String
+  titleSlug  String                 @unique
   difficulty String
   topics     Topic[]
   progress   UserQuestionProgress[]

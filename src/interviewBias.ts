@@ -6,6 +6,7 @@ export const interviewBias : Record<string,number> = {
   "stack" : 1.015,
   "queue" : 1.015,
   "matrix" : 1.0,
+  "math" : 1.0,
   "heap-priority-queue" : 1.025,
   "tree": 1.02,
   "binary-tree": 1.02,
@@ -36,9 +37,12 @@ export const interviewBias : Record<string,number> = {
   "monotonic-stack": 1.005,
   "monotonic-queue": 1.01,
   "segment-tree": 0.99,
+  "simulation" : 0.98,
   "binary-indexed-tree":0.99,
   "number-theory" : 0.99,
   "combinatorics": 0.99,
+  "game-theory": 0.97,
+  "bitmask": 0.97
 };
 
 export function getPreferredSlugs(): Set<string> {

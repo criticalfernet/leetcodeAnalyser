@@ -77,7 +77,7 @@ export default function App() {
             <div>
               <h2>Suggested Topics</h2>
               {recommendedTopics.map((topic) => (
-                <p className="hover:underline"
+                <p key={topic.slug} className="hover:underline"
                   onClick={() => navigate(`/topic/${topic.slug}`)}>
                   {topic.name || "N/A"}
                 </p>
