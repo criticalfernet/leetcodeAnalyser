@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import type { Question } from "./types";
 import { getProgressTopic, getQuestions, markQuestionDone } from "./api";
 import QuestionItem from "./components/QuestionItem";
-import { ArrowLeft, CheckCircle2, Award, Search } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Award } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import './styles/topicPage.css'
 
