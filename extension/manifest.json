@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "ALGO Compass sync",
+  "version": "1.0.0",
+  "description": "Automatically sync LeetCode solves.",
+
+  "permissions": [
+    "webRequest",
+    "https://leetcode.com/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+}

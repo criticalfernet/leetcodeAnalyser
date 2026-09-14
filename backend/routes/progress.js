@@ -27,13 +27,14 @@ router.post("/", async function (req, res) {
     }
 
     const lastAccepted = await getLastAccepted(question.titleSlug);
-    const lastAcceptedAt = new Date(Number(lastAccepted) * 1000);
 
     if (!lastAccepted) {
       return res.json({
         message: "Question has not been accepted",
       });
     }
+
+    const lastAcceptedAt = new Date(Number(lastAccepted) * 1000);
 
     const user = await prisma.user.upsert({
       where: {
@@ -156,6 +157,79 @@ router.get("/:topic", async function (req, res) {
 
     res.status(500).json({
       error: "Failed to fetch topic progress",
+    });
+  }
+});
+
+router.post("/extension", async (req, res) => {
+  try {
+    const { slug } = req.body;
+
+    if (!slug) {
+      return res.status(400).json({
+        error: "slug is required",
+      });
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 5000)); //5 sec for lc to sync
+
+    const question = await prisma.question.findUnique({
+      where: {
+        titleSlug: slug,
+      },
+    });
+
+    if (!question) {
+      return res.status(404).json({
+        error: "Question not found",
+      });
+    }
+
+    const lastAccepted = await getLastAccepted(slug);
+
+    if (!lastAccepted) {
+      return res.json({
+        message: "Question has not been accepted",
+      });
+    }
+
+    const lastAcceptedAt = new Date(Number(lastAccepted) * 1000);
+
+    const user = await prisma.user.upsert({
+      where: {
+        username: "admin",
+      },
+      update: {},
+      create: {
+        username: "admin",
+      },
+    });
+
+    const progress = await prisma.userQuestionProgress.upsert({
+      where: {
+        userId_questionId: {
+          userId: user.id,
+          questionId: question.id,
+        },
+      },
+      update: {
+        lastAcceptedAt,
+      },
+      create: {
+        userId: user.id,
+        questionId: question.id,
+        lastAcceptedAt,
+      },
+    });
+
+    return res.json({
+      progress,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      error: "Failed to update progress",
     });
   }
 });
