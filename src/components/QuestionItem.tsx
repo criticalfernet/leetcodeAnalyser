@@ -1,5 +1,5 @@
 import type { Question } from "../types";
-import { Check, Square, CheckSquare } from "lucide-react";
+import { Check, Square, CheckSquare, ArrowUpRight } from "lucide-react";
 import '../styles/questionItem.css'
 
 interface Props {
@@ -30,6 +30,18 @@ function QuestionItem({ question, selected, done, onSelect }: Props) {
             #{question.frontendId}
           </span>
           {question.title}
+          <a
+            href={`https://leetcode.com/problems/${question.titleSlug}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ArrowUpRight
+              size={16}
+              strokeWidth={3}
+              className="inline-block ml-1.5"
+            />
+          </a>
         </span>
       </div>
 
@@ -41,13 +53,12 @@ function QuestionItem({ question, selected, done, onSelect }: Props) {
 export default QuestionItem;
 
 function variant(done: boolean, selected: boolean): string {
-  return `question-list-item ${
-    selected
-      ? "bg-[#3b5228] border-[#76945a] shadow-md"
-      : done
-        ? "bg-[#1f2818] border-[#3a472b] opacity-75 hover:opacity-100"
-        : "bg-[#36402c] border-[#4b5f37] hover:border-[#63804a]"
-  }`;
+  return `question-list-item ${selected
+    ? "bg-[#3b5228] border-[#76945a] shadow-md"
+    : done
+      ? "bg-[#1f2818] border-[#3a472b] opacity-75 hover:opacity-100"
+      : "bg-[#36402c] border-[#4b5f37] hover:border-[#63804a]"
+    }`;
 }
 
 function Checkbox({ selected }: { selected: boolean }) {
@@ -64,9 +75,9 @@ function Checkbox({ selected }: { selected: boolean }) {
 type RightProp = {
   question: Question,
   done: boolean
-} 
+}
 
-function Right({question, done} : RightProp) {
+function Right({ question, done }: RightProp) {
   return (<div className="flex items-center gap-3 shrink-0">
     <span
       className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${difficultyStyles[question.difficulty] || "bg-slate-800 text-slate-300 border-slate-700"
