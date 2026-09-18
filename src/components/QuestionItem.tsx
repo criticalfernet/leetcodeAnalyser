@@ -46,7 +46,7 @@ function variant(done: boolean, selected: boolean): string {
       ? "bg-[#3b5228] border-[#76945a] shadow-md"
       : done
         ? "bg-[#1f2818] border-[#3a472b] opacity-75 hover:opacity-100"
-        : "bg-[#26301c] border-[#4b5f37] hover:border-[#63804a]"
+        : "bg-[#36402c] border-[#4b5f37] hover:border-[#63804a]"
   }`;
 }
 
