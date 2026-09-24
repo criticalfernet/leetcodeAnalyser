@@ -29,13 +29,13 @@ function QuestionItem({ question, selected, done, onSelect }: Props) {
           <span className="text-[var(--primary-600)] mr-2 font-mono text-xs">
             #{question.frontendId}
           </span>
-          {question.title}
           <a
             href={`https://leetcode.com/problems/${question.titleSlug}/`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
+            {question.title}
             <ArrowUpRight
               size={16}
               strokeWidth={3}

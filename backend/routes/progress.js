@@ -282,7 +282,9 @@ async function getLastAccepted(questionSlug) {
     throw new Error("LeetCode GraphQL request failed");
   }
 
-  const submissions = result.data.submissionList.submissions;
+  const submissions = result.data.submissionList.submissions ?? [];
+
+  console.log("result:", result.data.submissionList);
 
   const accepted = submissions.find(function (submission) {
     return submission.statusDisplay === "Accepted";
